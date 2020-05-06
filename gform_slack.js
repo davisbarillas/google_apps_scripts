@@ -1,10 +1,4 @@
-var incomingWebhookUrl = 'https://hooks.slack.com/services/YOUR-URL-HERE';
-var postChannel = "YOUR-CHANNEL-HERE";
-var postIcon = ":mailbox_with_mail:";
-var postUser = "Form Response";
-var postColor = "#00B1AC";
-var messageFallback = "The attachment must be viewed as plain text.";
-var messagePretext = "A user submitted a response to the form.";
+var incomingWebhookUrl = '';
 
 function initialize() {
   var triggers = ScriptApp.getProjectTriggers();
@@ -20,9 +14,9 @@ function initialize() {
 function postValuesToSlack(e) {
   var attachments = createAttachments(e.values);
   var payload = {
-    "channel": postChannel,
-    "username": postUser,
-    "icon_emoji": postIcon,
+    "channel": "G013GS3UAFK",
+    "username": "Form Response",
+    "icon_emoji": ":mailbox_with_mail:",
     "link_names": 1,
     "attachments": attachments
   };
@@ -42,6 +36,13 @@ var makeFieldForMessage = function(question, answer) {
   return field;
 }
 
+var getColumnNames = function() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var headerRow = sheet.getRange("1:1");
+  var headerRowValues = headerRow.getValues()[0];
+  return headerRowValues;
+}
+
 var makeArrayOfSlackFields = function(values) {
   var fields = [];
   var columnNames = getColumnNames();
@@ -53,20 +54,13 @@ var makeArrayOfSlackFields = function(values) {
   return fields;
 }
 
-var getColumnNames = function() {
-  var sheet = SpreadsheetApp.getActiveSheet();
-  var headerRow = sheet.getRange("1:1");
-  var headerRowValues = headerRow.getValues()[0];
-  return headerRowValues;
-}
-
 var createAttachments = function(values) {
   var fields = makeArrayOfSlackFields(values);
   var attachments = [{
-    "fallback" : messageFallback,
-    "pretext" : messagePretext,
+    "fallback" : "The attachment must be viewed as plain text.",
+    "pretext" : "A user submitted a response to the form.",
     "mrkdwn_in" : ["pretext"],
-    "color" : postColor,
+    "color" : "#00B1AC",
     "fields" : fields
   }]
   return attachments;
